@@ -406,6 +406,7 @@ task is identified along with a snippet of the matching comment.
 
  * @summary Search across the workspace
  */
+export const searchQueryQMin = 2;
 
 export const searchQueryLimitDefault = 20;
 export const searchQueryLimitMax = 50;
@@ -413,7 +414,7 @@ export const searchQueryLimitMax = 50;
 export const SearchQueryParams = zod.object({
   q: zod.coerce
     .string()
-    .min(1)
+    .min(searchQueryQMin)
     .describe("The search query (case-insensitive substring match)"),
   limit: zod.coerce
     .number()

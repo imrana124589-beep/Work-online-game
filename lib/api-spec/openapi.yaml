@@ -414,7 +414,7 @@ paths:
           required: true
           schema:
             type: string
-            minLength: 1
+            minLength: 2
           description: The search query (case-insensitive substring match)
         - in: query
           name: limit

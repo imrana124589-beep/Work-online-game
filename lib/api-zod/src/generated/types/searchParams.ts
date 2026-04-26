@@ -9,7 +9,7 @@
 export type SearchParams = {
   /**
    * The search query (case-insensitive substring match)
-   * @minLength 1
+   * @minLength 2
    */
   q: string;
   /**
