@@ -204,6 +204,21 @@ export interface DashboardSummary {
   byStatus: DashboardSummaryByStatus;
 }
 
+export interface CommentSearchResult {
+  commentId: number;
+  taskId: number;
+  taskTitle: string;
+  projectId: number;
+  memberId: number;
+  /** Excerpt of the comment around the match */
+  snippet: string;
+  createdAt: string;
+}
+
+export interface SearchResults {
+  comments: CommentSearchResult[];
+}
+
 export interface Workload {
   memberId: number;
   memberName: string;
@@ -252,5 +267,17 @@ export const ListTasksStatus = {
 } as const;
 
 export type GetRecentActivityParams = {
+  limit?: number;
+};
+
+export type SearchParams = {
+  /**
+   * The search query (case-insensitive substring match)
+   * @minLength 1
+   */
+  q: string;
+  /**
+   * @maximum 50
+   */
   limit?: number;
 };
