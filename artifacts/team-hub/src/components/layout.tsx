@@ -1,7 +1,9 @@
+import { useState } from "react";
 import { Link, useLocation } from "wouter";
 import { useGetMe } from "@workspace/api-client-react";
-import { LayoutDashboard, FolderKanban, Users, Loader2 } from "lucide-react";
+import { LayoutDashboard, FolderKanban, Users, Loader2, Search } from "lucide-react";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
+import { SearchPalette } from "@/components/search-palette";
 import { cn } from "@/lib/utils";
 
 const NAV_ITEMS = [
@@ -10,9 +12,13 @@ const NAV_ITEMS = [
   { href: "/team", label: "Team", icon: Users },
 ];
 
-function Sidebar() {
+function Sidebar({ onOpenSearch }: { onOpenSearch: () => void }) {
   const [location] = useLocation();
   const { data: me, isLoading } = useGetMe();
+
+  const isMac =
+    typeof navigator !== "undefined" && /mac/i.test(navigator.platform);
+  const shortcut = isMac ? "⌘K" : "Ctrl+K";
 
   return (
     <aside className="fixed top-0 left-0 bottom-0 w-64 border-r border-sidebar-border bg-sidebar text-sidebar-foreground flex flex-col z-10">
@@ -24,7 +30,22 @@ function Sidebar() {
           <span className="font-semibold text-lg tracking-tight">Team Hub</span>
         </div>
       </div>
-      
+
+      <div className="px-4 pt-4">
+        <button
+          type="button"
+          onClick={onOpenSearch}
+          data-testid="button-open-search"
+          className="w-full flex items-center gap-2 px-3 py-2 rounded-md text-sm text-sidebar-foreground/60 bg-sidebar-accent/40 hover:bg-sidebar-accent/70 hover:text-sidebar-foreground transition-colors border border-sidebar-border/60"
+        >
+          <Search className="w-4 h-4" />
+          <span className="flex-1 text-left">Search...</span>
+          <kbd className="text-[10px] font-mono bg-sidebar/70 border border-sidebar-border/60 px-1.5 py-0.5 rounded">
+            {shortcut}
+          </kbd>
+        </button>
+      </div>
+
       <nav className="flex-1 overflow-y-auto py-6 px-4 space-y-1">
         <div className="text-xs font-semibold text-sidebar-foreground/50 uppercase tracking-wider mb-4 px-2">Menu</div>
         {NAV_ITEMS.map((item) => {
@@ -67,12 +88,15 @@ function Sidebar() {
 }
 
 export function Layout({ children }: { children: React.ReactNode }) {
+  const [searchOpen, setSearchOpen] = useState(false);
+
   return (
     <div className="min-h-[100dvh] bg-background w-full">
-      <Sidebar />
+      <Sidebar onOpenSearch={() => setSearchOpen(true)} />
       <main className="pl-64 flex flex-col min-h-[100dvh]">
         {children}
       </main>
+      <SearchPalette open={searchOpen} onOpenChange={setSearchOpen} />
     </div>
   );
 }
