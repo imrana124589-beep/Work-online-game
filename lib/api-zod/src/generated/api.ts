@@ -236,6 +236,11 @@ export const ListTasksResponseItem = zod.object({
   priority: zod.enum(["low", "medium", "high", "urgent"]),
   assigneeId: zod.number().nullish(),
   dueDate: zod.coerce.date().nullish(),
+  position: zod
+    .number()
+    .describe(
+      "Sort order within the task's status column. Lower values render first.",
+    ),
   createdAt: zod.coerce.date(),
   updatedAt: zod.coerce.date(),
 });
@@ -270,6 +275,11 @@ export const GetTaskResponse = zod.object({
   priority: zod.enum(["low", "medium", "high", "urgent"]),
   assigneeId: zod.number().nullish(),
   dueDate: zod.coerce.date().nullish(),
+  position: zod
+    .number()
+    .describe(
+      "Sort order within the task's status column. Lower values render first.",
+    ),
   createdAt: zod.coerce.date(),
   updatedAt: zod.coerce.date(),
 });
@@ -288,6 +298,10 @@ export const UpdateTaskBody = zod.object({
   priority: zod.enum(["low", "medium", "high", "urgent"]).optional(),
   assigneeId: zod.number().nullish(),
   dueDate: zod.coerce.date().nullish(),
+  position: zod
+    .number()
+    .optional()
+    .describe("New sort position within the destination column."),
 });
 
 export const UpdateTaskResponse = zod.object({
@@ -299,6 +313,11 @@ export const UpdateTaskResponse = zod.object({
   priority: zod.enum(["low", "medium", "high", "urgent"]),
   assigneeId: zod.number().nullish(),
   dueDate: zod.coerce.date().nullish(),
+  position: zod
+    .number()
+    .describe(
+      "Sort order within the task's status column. Lower values render first.",
+    ),
   createdAt: zod.coerce.date(),
   updatedAt: zod.coerce.date(),
 });
@@ -394,6 +413,11 @@ export const GetMyTasksResponseItem = zod.object({
   priority: zod.enum(["low", "medium", "high", "urgent"]),
   assigneeId: zod.number().nullish(),
   dueDate: zod.coerce.date().nullish(),
+  position: zod
+    .number()
+    .describe(
+      "Sort order within the task's status column. Lower values render first.",
+    ),
   createdAt: zod.coerce.date(),
   updatedAt: zod.coerce.date(),
 });

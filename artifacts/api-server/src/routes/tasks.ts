@@ -1,5 +1,5 @@
 import { Router, type IRouter } from "express";
-import { eq, and, asc, desc } from "drizzle-orm";
+import { eq, and, asc, desc, max } from "drizzle-orm";
 import {
   db,
   tasksTable,
@@ -39,7 +39,7 @@ router.get("/tasks", async (req, res): Promise<void> => {
     .select()
     .from(tasksTable)
     .where(conditions.length ? and(...conditions) : undefined)
-    .orderBy(asc(tasksTable.id));
+    .orderBy(asc(tasksTable.position), asc(tasksTable.id));
   res.json(ListTasksResponse.parse(rows.map(serializeTask)));
 });
 
@@ -49,16 +49,28 @@ router.post("/tasks", async (req, res): Promise<void> => {
     res.status(400).json({ error: parsed.error.message });
     return;
   }
+  const status = parsed.data.status ?? "todo";
+  const [maxRow] = await db
+    .select({ value: max(tasksTable.position) })
+    .from(tasksTable)
+    .where(
+      and(
+        eq(tasksTable.projectId, parsed.data.projectId),
+        eq(tasksTable.status, status),
+      ),
+    );
+  const nextPosition = (maxRow?.value ?? 0) + 1;
   const [task] = await db
     .insert(tasksTable)
     .values({
       projectId: parsed.data.projectId,
       title: parsed.data.title,
       description: parsed.data.description ?? "",
-      status: parsed.data.status ?? "todo",
+      status,
       priority: parsed.data.priority ?? "medium",
       assigneeId: parsed.data.assigneeId ?? null,
       dueDate: parsed.data.dueDate ? new Date(parsed.data.dueDate) : null,
+      position: nextPosition,
     })
     .returning();
   if (!task) {

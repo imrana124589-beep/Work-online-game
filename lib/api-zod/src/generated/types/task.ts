@@ -19,6 +19,8 @@ export interface Task {
   assigneeId?: number | null;
   /** @nullable */
   dueDate?: Date | null;
+  /** Sort order within the task's status column. Lower values render first. */
+  position: number;
   createdAt: Date;
   updatedAt: Date;
 }

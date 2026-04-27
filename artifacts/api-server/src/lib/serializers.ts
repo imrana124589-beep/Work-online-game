@@ -40,6 +40,7 @@ export function serializeTask(t: Task) {
     priority: t.priority,
     assigneeId: t.assigneeId ?? null,
     dueDate: t.dueDate ? t.dueDate.toISOString() : null,
+    position: t.position,
     createdAt: t.createdAt.toISOString(),
     updatedAt: t.updatedAt.toISOString(),
   };

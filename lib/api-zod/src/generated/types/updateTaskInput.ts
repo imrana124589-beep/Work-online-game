@@ -17,4 +17,6 @@ export interface UpdateTaskInput {
   assigneeId?: number | null;
   /** @nullable */
   dueDate?: Date | null;
+  /** New sort position within the destination column. */
+  position?: number;
 }

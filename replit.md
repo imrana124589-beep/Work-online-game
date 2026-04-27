@@ -25,7 +25,7 @@ And one runner package:
 
 - **Member** — name, email, role, avatarColor. Member with id `1` (Ava Chen) is the implicit "current user".
 - **Project** — name, description, color, status (`active` | `archived`), dueDate, taskCount, completedCount.
-- **Task** — projectId, title, description, status (`todo` | `in_progress` | `in_review` | `done`), priority (`low` | `medium` | `high` | `urgent`), assigneeId, dueDate.
+- **Task** — projectId, title, description, status (`todo` | `in_progress` | `in_review` | `done`), priority (`low` | `medium` | `high` | `urgent`), assigneeId, dueDate, position (double — sort order within a status column; midpoint inserts on drag-reorder).
 - **Comment** — taskId, memberId, content.
 - **Activity** — append-only feed of human-readable events. The API auto-logs activity on task create, status change, assignee change, completion, project create, and comment add.
 

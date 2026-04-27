@@ -320,7 +320,19 @@ async function main() {
     },
   ];
 
-  const tasks = await db.insert(tasksTable).values(taskSeeds).returning();
+  const positionCounters = new Map<string, number>();
+  const taskSeedsWithPosition = taskSeeds.map((t) => {
+    const status = t.status ?? "todo";
+    const key = `${t.projectId}:${status}`;
+    const next = (positionCounters.get(key) ?? 0) + 1;
+    positionCounters.set(key, next);
+    return { ...t, position: next };
+  });
+
+  const tasks = await db
+    .insert(tasksTable)
+    .values(taskSeedsWithPosition)
+    .returning();
 
   console.log("Seeding comments...");
   const t0 = tasks[0];

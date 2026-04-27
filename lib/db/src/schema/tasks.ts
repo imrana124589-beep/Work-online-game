@@ -1,4 +1,11 @@
-import { pgTable, serial, text, timestamp, integer } from "drizzle-orm/pg-core";
+import {
+  pgTable,
+  serial,
+  text,
+  timestamp,
+  integer,
+  doublePrecision,
+} from "drizzle-orm/pg-core";
 import { projectsTable } from "./projects";
 import { membersTable } from "./members";
 
@@ -15,6 +22,7 @@ export const tasksTable = pgTable("tasks", {
     onDelete: "set null",
   }),
   dueDate: timestamp("due_date", { withTimezone: true }),
+  position: doublePrecision("position").notNull().default(0),
   createdAt: timestamp("created_at", { withTimezone: true })
     .notNull()
     .defaultNow(),

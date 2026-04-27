@@ -127,6 +127,8 @@ export interface Task {
   assigneeId?: number | null;
   /** @nullable */
   dueDate?: string | null;
+  /** Sort order within the task's status column. Lower values render first. */
+  position: number;
   createdAt: string;
   updatedAt: string;
 }
@@ -155,6 +157,8 @@ export interface UpdateTaskInput {
   assigneeId?: number | null;
   /** @nullable */
   dueDate?: string | null;
+  /** New sort position within the destination column. */
+  position?: number;
 }
 
 export interface Comment {

@@ -613,6 +613,7 @@ components:
         - description
         - status
         - priority
+        - position
         - createdAt
         - updatedAt
       properties:
@@ -633,6 +634,9 @@ components:
         dueDate:
           type: ["string", "null"]
           format: date-time
+        position:
+          type: number
+          description: Sort order within the task's status column. Lower values render first.
         createdAt:
           type: string
           format: date-time
@@ -678,6 +682,9 @@ components:
         dueDate:
           type: ["string", "null"]
           format: date-time
+        position:
+          type: number
+          description: New sort position within the destination column.
 
     Comment:
       type: object
