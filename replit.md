@@ -28,6 +28,7 @@ And one runner package:
 - **Task** — projectId, title, description, status (`todo` | `in_progress` | `in_review` | `done`), priority (`low` | `medium` | `high` | `urgent`), assigneeId, dueDate, position (double — sort order within a status column; midpoint inserts on drag-reorder).
 - **Comment** — taskId, memberId, content.
 - **Activity** — append-only feed of human-readable events. The API auto-logs activity on task create, status change, assignee change, completion, project create, and comment add.
+- **BoardFilterPreset** — projectId, memberId, name, payload `{ assigneeIds, priorities, overdueOnly }`. Per-project, per-member saved Kanban filter view. Surfaced as one-click chips on the project board.
 
 All IDs are integers.
 

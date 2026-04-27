@@ -20,6 +20,8 @@ tags:
     description: Comments on tasks
   - name: dashboard
     description: Aggregated workspace insights
+  - name: filter-presets
+    description: Saved board filter presets
 paths:
   /healthz:
     get:
@@ -350,6 +352,72 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/Comment"
+
+  /projects/{id}/filter-presets:
+    get:
+      operationId: listProjectFilterPresets
+      tags: [filter-presets]
+      summary: List saved board filter presets for the current member on a project
+      parameters:
+        - $ref: "#/components/parameters/IdPath"
+      responses:
+        "200":
+          description: Filter presets
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/BoardFilterPresetList"
+        "404":
+          $ref: "#/components/responses/NotFound"
+    post:
+      operationId: createProjectFilterPreset
+      tags: [filter-presets]
+      summary: Save the current filter combination as a named preset
+      parameters:
+        - $ref: "#/components/parameters/IdPath"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CreateBoardFilterPresetInput"
+      responses:
+        "201":
+          description: Preset created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/BoardFilterPreset"
+        "404":
+          $ref: "#/components/responses/NotFound"
+        "409":
+          description: A preset with this name already exists for this project
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+
+  /projects/{projectId}/filter-presets/{presetId}:
+    delete:
+      operationId: deleteProjectFilterPreset
+      tags: [filter-presets]
+      summary: Delete a saved board filter preset
+      parameters:
+        - in: path
+          name: projectId
+          required: true
+          schema:
+            type: integer
+        - in: path
+          name: presetId
+          required: true
+          schema:
+            type: integer
+      responses:
+        "204":
+          description: Preset deleted
+        "404":
+          $ref: "#/components/responses/NotFound"
 
   /dashboard/summary:
     get:
@@ -810,3 +878,59 @@ components:
       type: array
       items:
         $ref: "#/components/schemas/Workload"
+
+    BoardFilterPresetPayload:
+      type: object
+      required: [assigneeIds, priorities, overdueOnly]
+      properties:
+        assigneeIds:
+          type: array
+          items:
+            type: integer
+        priorities:
+          type: array
+          items:
+            $ref: "#/components/schemas/TaskPriority"
+        overdueOnly:
+          type: boolean
+    BoardFilterPreset:
+      type: object
+      required:
+        - id
+        - projectId
+        - memberId
+        - name
+        - payload
+        - createdAt
+        - updatedAt
+      properties:
+        id:
+          type: integer
+        projectId:
+          type: integer
+        memberId:
+          type: integer
+        name:
+          type: string
+        payload:
+          $ref: "#/components/schemas/BoardFilterPresetPayload"
+        createdAt:
+          type: string
+          format: date-time
+        updatedAt:
+          type: string
+          format: date-time
+    BoardFilterPresetList:
+      type: array
+      items:
+        $ref: "#/components/schemas/BoardFilterPreset"
+    CreateBoardFilterPresetInput:
+      type: object
+      required: [name, payload]
+      properties:
+        name:
+          type: string
+          minLength: 1
+          maxLength: 60
+        payload:
+          $ref: "#/components/schemas/BoardFilterPresetPayload"

@@ -18,13 +18,17 @@ import type {
 
 import type {
   ActivityList,
+  BoardFilterPreset,
+  BoardFilterPresetList,
   Comment,
   CommentList,
+  CreateBoardFilterPresetInput,
   CreateCommentInput,
   CreateMemberInput,
   CreateProjectInput,
   CreateTaskInput,
   DashboardSummary,
+  ErrorResponse,
   GetRecentActivityParams,
   HealthStatus,
   ListProjectsParams,
@@ -1733,6 +1737,280 @@ export const useCreateTaskComment = <
   TContext
 > => {
   return useMutation(getCreateTaskCommentMutationOptions(options));
+};
+
+/**
+ * @summary List saved board filter presets for the current member on a project
+ */
+export const getListProjectFilterPresetsUrl = (id: number) => {
+  return `/api/projects/${id}/filter-presets`;
+};
+
+export const listProjectFilterPresets = async (
+  id: number,
+  options?: RequestInit,
+): Promise<BoardFilterPresetList> => {
+  return customFetch<BoardFilterPresetList>(
+    getListProjectFilterPresetsUrl(id),
+    {
+      ...options,
+      method: "GET",
+    },
+  );
+};
+
+export const getListProjectFilterPresetsQueryKey = (id: number) => {
+  return [`/api/projects/${id}/filter-presets`] as const;
+};
+
+export const getListProjectFilterPresetsQueryOptions = <
+  TData = Awaited<ReturnType<typeof listProjectFilterPresets>>,
+  TError = ErrorType<NotFoundResponse>,
+>(
+  id: number,
+  options?: {
+    query?: UseQueryOptions<
+      Awaited<ReturnType<typeof listProjectFilterPresets>>,
+      TError,
+      TData
+    >;
+    request?: SecondParameter<typeof customFetch>;
+  },
+) => {
+  const { query: queryOptions, request: requestOptions } = options ?? {};
+
+  const queryKey =
+    queryOptions?.queryKey ?? getListProjectFilterPresetsQueryKey(id);
+
+  const queryFn: QueryFunction<
+    Awaited<ReturnType<typeof listProjectFilterPresets>>
+  > = ({ signal }) =>
+    listProjectFilterPresets(id, { signal, ...requestOptions });
+
+  return {
+    queryKey,
+    queryFn,
+    enabled: !!id,
+    ...queryOptions,
+  } as UseQueryOptions<
+    Awaited<ReturnType<typeof listProjectFilterPresets>>,
+    TError,
+    TData
+  > & { queryKey: QueryKey };
+};
+
+export type ListProjectFilterPresetsQueryResult = NonNullable<
+  Awaited<ReturnType<typeof listProjectFilterPresets>>
+>;
+export type ListProjectFilterPresetsQueryError = ErrorType<NotFoundResponse>;
+
+/**
+ * @summary List saved board filter presets for the current member on a project
+ */
+
+export function useListProjectFilterPresets<
+  TData = Awaited<ReturnType<typeof listProjectFilterPresets>>,
+  TError = ErrorType<NotFoundResponse>,
+>(
+  id: number,
+  options?: {
+    query?: UseQueryOptions<
+      Awaited<ReturnType<typeof listProjectFilterPresets>>,
+      TError,
+      TData
+    >;
+    request?: SecondParameter<typeof customFetch>;
+  },
+): UseQueryResult<TData, TError> & { queryKey: QueryKey } {
+  const queryOptions = getListProjectFilterPresetsQueryOptions(id, options);
+
+  const query = useQuery(queryOptions) as UseQueryResult<TData, TError> & {
+    queryKey: QueryKey;
+  };
+
+  return { ...query, queryKey: queryOptions.queryKey };
+}
+
+/**
+ * @summary Save the current filter combination as a named preset
+ */
+export const getCreateProjectFilterPresetUrl = (id: number) => {
+  return `/api/projects/${id}/filter-presets`;
+};
+
+export const createProjectFilterPreset = async (
+  id: number,
+  createBoardFilterPresetInput: CreateBoardFilterPresetInput,
+  options?: RequestInit,
+): Promise<BoardFilterPreset> => {
+  return customFetch<BoardFilterPreset>(getCreateProjectFilterPresetUrl(id), {
+    ...options,
+    method: "POST",
+    headers: { "Content-Type": "application/json", ...options?.headers },
+    body: JSON.stringify(createBoardFilterPresetInput),
+  });
+};
+
+export const getCreateProjectFilterPresetMutationOptions = <
+  TError = ErrorType<NotFoundResponse | ErrorResponse>,
+  TContext = unknown,
+>(options?: {
+  mutation?: UseMutationOptions<
+    Awaited<ReturnType<typeof createProjectFilterPreset>>,
+    TError,
+    { id: number; data: BodyType<CreateBoardFilterPresetInput> },
+    TContext
+  >;
+  request?: SecondParameter<typeof customFetch>;
+}): UseMutationOptions<
+  Awaited<ReturnType<typeof createProjectFilterPreset>>,
+  TError,
+  { id: number; data: BodyType<CreateBoardFilterPresetInput> },
+  TContext
+> => {
+  const mutationKey = ["createProjectFilterPreset"];
+  const { mutation: mutationOptions, request: requestOptions } = options
+    ? options.mutation &&
+      "mutationKey" in options.mutation &&
+      options.mutation.mutationKey
+      ? options
+      : { ...options, mutation: { ...options.mutation, mutationKey } }
+    : { mutation: { mutationKey }, request: undefined };
+
+  const mutationFn: MutationFunction<
+    Awaited<ReturnType<typeof createProjectFilterPreset>>,
+    { id: number; data: BodyType<CreateBoardFilterPresetInput> }
+  > = (props) => {
+    const { id, data } = props ?? {};
+
+    return createProjectFilterPreset(id, data, requestOptions);
+  };
+
+  return { mutationFn, ...mutationOptions };
+};
+
+export type CreateProjectFilterPresetMutationResult = NonNullable<
+  Awaited<ReturnType<typeof createProjectFilterPreset>>
+>;
+export type CreateProjectFilterPresetMutationBody =
+  BodyType<CreateBoardFilterPresetInput>;
+export type CreateProjectFilterPresetMutationError = ErrorType<
+  NotFoundResponse | ErrorResponse
+>;
+
+/**
+ * @summary Save the current filter combination as a named preset
+ */
+export const useCreateProjectFilterPreset = <
+  TError = ErrorType<NotFoundResponse | ErrorResponse>,
+  TContext = unknown,
+>(options?: {
+  mutation?: UseMutationOptions<
+    Awaited<ReturnType<typeof createProjectFilterPreset>>,
+    TError,
+    { id: number; data: BodyType<CreateBoardFilterPresetInput> },
+    TContext
+  >;
+  request?: SecondParameter<typeof customFetch>;
+}): UseMutationResult<
+  Awaited<ReturnType<typeof createProjectFilterPreset>>,
+  TError,
+  { id: number; data: BodyType<CreateBoardFilterPresetInput> },
+  TContext
+> => {
+  return useMutation(getCreateProjectFilterPresetMutationOptions(options));
+};
+
+/**
+ * @summary Delete a saved board filter preset
+ */
+export const getDeleteProjectFilterPresetUrl = (
+  projectId: number,
+  presetId: number,
+) => {
+  return `/api/projects/${projectId}/filter-presets/${presetId}`;
+};
+
+export const deleteProjectFilterPreset = async (
+  projectId: number,
+  presetId: number,
+  options?: RequestInit,
+): Promise<void> => {
+  return customFetch<void>(
+    getDeleteProjectFilterPresetUrl(projectId, presetId),
+    {
+      ...options,
+      method: "DELETE",
+    },
+  );
+};
+
+export const getDeleteProjectFilterPresetMutationOptions = <
+  TError = ErrorType<NotFoundResponse>,
+  TContext = unknown,
+>(options?: {
+  mutation?: UseMutationOptions<
+    Awaited<ReturnType<typeof deleteProjectFilterPreset>>,
+    TError,
+    { projectId: number; presetId: number },
+    TContext
+  >;
+  request?: SecondParameter<typeof customFetch>;
+}): UseMutationOptions<
+  Awaited<ReturnType<typeof deleteProjectFilterPreset>>,
+  TError,
+  { projectId: number; presetId: number },
+  TContext
+> => {
+  const mutationKey = ["deleteProjectFilterPreset"];
+  const { mutation: mutationOptions, request: requestOptions } = options
+    ? options.mutation &&
+      "mutationKey" in options.mutation &&
+      options.mutation.mutationKey
+      ? options
+      : { ...options, mutation: { ...options.mutation, mutationKey } }
+    : { mutation: { mutationKey }, request: undefined };
+
+  const mutationFn: MutationFunction<
+    Awaited<ReturnType<typeof deleteProjectFilterPreset>>,
+    { projectId: number; presetId: number }
+  > = (props) => {
+    const { projectId, presetId } = props ?? {};
+
+    return deleteProjectFilterPreset(projectId, presetId, requestOptions);
+  };
+
+  return { mutationFn, ...mutationOptions };
+};
+
+export type DeleteProjectFilterPresetMutationResult = NonNullable<
+  Awaited<ReturnType<typeof deleteProjectFilterPreset>>
+>;
+
+export type DeleteProjectFilterPresetMutationError =
+  ErrorType<NotFoundResponse>;
+
+/**
+ * @summary Delete a saved board filter preset
+ */
+export const useDeleteProjectFilterPreset = <
+  TError = ErrorType<NotFoundResponse>,
+  TContext = unknown,
+>(options?: {
+  mutation?: UseMutationOptions<
+    Awaited<ReturnType<typeof deleteProjectFilterPreset>>,
+    TError,
+    { projectId: number; presetId: number },
+    TContext
+  >;
+  request?: SecondParameter<typeof customFetch>;
+}): UseMutationResult<
+  Awaited<ReturnType<typeof deleteProjectFilterPreset>>,
+  TError,
+  { projectId: number; presetId: number },
+  TContext
+> => {
+  return useMutation(getDeleteProjectFilterPresetMutationOptions(options));
 };
 
 /**

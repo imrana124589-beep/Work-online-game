@@ -60,6 +60,7 @@ import {
 import { CreateTaskDialog } from "@/components/dialogs/create-task-dialog";
 import { MemberAvatar } from "@/components/member-avatar";
 import { BoardFilters } from "@/components/board-filters";
+import { SavedFilterPresets } from "@/components/saved-filter-presets";
 import { useBoardFilters } from "@/hooks/use-board-filters";
 import { STATUS_LABELS, STATUS_ORDER, PRIORITY_TONE, type TaskStatus } from "@/lib/constants";
 import { format, isPast, isToday } from "date-fns";
@@ -97,7 +98,13 @@ export default function ProjectDetail() {
   const { data: stats } = useGetProjectStats(projectId);
   const { data: tasks, isLoading: loadingTasks } = useListTasks({ projectId });
   const { data: members } = useListMembers();
-  const { filters, update: updateFilters, clear: clearFilters, hasActiveFilters } = useBoardFilters();
+  const {
+    filters,
+    update: updateFilters,
+    apply: applyFilters,
+    clear: clearFilters,
+    hasActiveFilters,
+  } = useBoardFilters();
 
   const deleteProject = useDeleteProject({
     mutation: {
@@ -368,13 +375,21 @@ export default function ProjectDetail() {
         </div>
       </div>
 
-      <BoardFilters
-        members={members ?? []}
-        filters={filters}
-        onChange={updateFilters}
-        onClear={clearFilters}
-        hasActiveFilters={hasActiveFilters}
-      />
+      <div className="flex flex-col gap-2">
+        <BoardFilters
+          members={members ?? []}
+          filters={filters}
+          onChange={updateFilters}
+          onClear={clearFilters}
+          hasActiveFilters={hasActiveFilters}
+        />
+        <SavedFilterPresets
+          projectId={projectId}
+          filters={filters}
+          onApply={applyFilters}
+          hasActiveFilters={hasActiveFilters}
+        />
+      </div>
 
       <DndContext
         sensors={sensors}

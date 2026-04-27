@@ -1,4 +1,11 @@
-import type { Member, Project, Task, Comment, Activity } from "@workspace/db";
+import type {
+  Member,
+  Project,
+  Task,
+  Comment,
+  Activity,
+  BoardFilterPreset,
+} from "@workspace/db";
 
 export function serializeMember(m: Member) {
   return {
@@ -53,6 +60,22 @@ export function serializeComment(c: Comment) {
     memberId: c.memberId,
     content: c.content,
     createdAt: c.createdAt.toISOString(),
+  };
+}
+
+export function serializeBoardFilterPreset(p: BoardFilterPreset) {
+  return {
+    id: p.id,
+    projectId: p.projectId,
+    memberId: p.memberId,
+    name: p.name,
+    payload: {
+      assigneeIds: p.payload.assigneeIds ?? [],
+      priorities: p.payload.priorities ?? [],
+      overdueOnly: Boolean(p.payload.overdueOnly),
+    },
+    createdAt: p.createdAt.toISOString(),
+    updatedAt: p.updatedAt.toISOString(),
   };
 }
 

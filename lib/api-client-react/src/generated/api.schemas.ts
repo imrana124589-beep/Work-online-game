@@ -222,6 +222,33 @@ export interface Workload {
 
 export type WorkloadList = Workload[];
 
+export interface BoardFilterPresetPayload {
+  assigneeIds: number[];
+  priorities: TaskPriority[];
+  overdueOnly: boolean;
+}
+
+export interface BoardFilterPreset {
+  id: number;
+  projectId: number;
+  memberId: number;
+  name: string;
+  payload: BoardFilterPresetPayload;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export type BoardFilterPresetList = BoardFilterPreset[];
+
+export interface CreateBoardFilterPresetInput {
+  /**
+   * @minLength 1
+   * @maxLength 60
+   */
+  name: string;
+  payload: BoardFilterPresetPayload;
+}
+
 /**
  * Not found
  */

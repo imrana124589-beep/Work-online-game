@@ -5,6 +5,7 @@ import projectsRouter from "./projects";
 import tasksRouter from "./tasks";
 import commentsRouter from "./comments";
 import dashboardRouter from "./dashboard";
+import filterPresetsRouter from "./filter-presets";
 
 const router: IRouter = Router();
 
@@ -14,5 +15,6 @@ router.use(projectsRouter);
 router.use(tasksRouter);
 router.use(commentsRouter);
 router.use(dashboardRouter);
+router.use(filterPresetsRouter);
 
 export default router;

@@ -8,8 +8,12 @@
 
 export * from "./activity";
 export * from "./activityList";
+export * from "./boardFilterPreset";
+export * from "./boardFilterPresetList";
+export * from "./boardFilterPresetPayload";
 export * from "./comment";
 export * from "./commentList";
+export * from "./createBoardFilterPresetInput";
 export * from "./createCommentInput";
 export * from "./createMemberInput";
 export * from "./createProjectInput";

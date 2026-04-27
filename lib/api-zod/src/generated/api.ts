@@ -358,6 +358,56 @@ export const CreateTaskCommentBody = zod.object({
 });
 
 /**
+ * @summary List saved board filter presets for the current member on a project
+ */
+export const ListProjectFilterPresetsParams = zod.object({
+  id: zod.coerce.number(),
+});
+
+export const ListProjectFilterPresetsResponseItem = zod.object({
+  id: zod.number(),
+  projectId: zod.number(),
+  memberId: zod.number(),
+  name: zod.string(),
+  payload: zod.object({
+    assigneeIds: zod.array(zod.number()),
+    priorities: zod.array(zod.enum(["low", "medium", "high", "urgent"])),
+    overdueOnly: zod.boolean(),
+  }),
+  createdAt: zod.coerce.date(),
+  updatedAt: zod.coerce.date(),
+});
+export const ListProjectFilterPresetsResponse = zod.array(
+  ListProjectFilterPresetsResponseItem,
+);
+
+/**
+ * @summary Save the current filter combination as a named preset
+ */
+export const CreateProjectFilterPresetParams = zod.object({
+  id: zod.coerce.number(),
+});
+
+export const createProjectFilterPresetBodyNameMax = 60;
+
+export const CreateProjectFilterPresetBody = zod.object({
+  name: zod.string().min(1).max(createProjectFilterPresetBodyNameMax),
+  payload: zod.object({
+    assigneeIds: zod.array(zod.number()),
+    priorities: zod.array(zod.enum(["low", "medium", "high", "urgent"])),
+    overdueOnly: zod.boolean(),
+  }),
+});
+
+/**
+ * @summary Delete a saved board filter preset
+ */
+export const DeleteProjectFilterPresetParams = zod.object({
+  projectId: zod.coerce.number(),
+  presetId: zod.coerce.number(),
+});
+
+/**
  * @summary Top-level workspace summary for the home dashboard
  */
 export const GetDashboardSummaryResponse = zod.object({
