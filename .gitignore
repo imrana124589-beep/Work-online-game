@@ -47,6 +47,3 @@ Thumbs.db
 # Replit
 .cache/
 .local/
-
-# Auto-generated OG image for team-hub artifact
-artifacts/team-hub/public/opengraph.jpg

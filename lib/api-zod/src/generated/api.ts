@@ -400,43 +400,6 @@ export const GetMyTasksResponseItem = zod.object({
 export const GetMyTasksResponse = zod.array(GetMyTasksResponseItem);
 
 /**
- * Returns search results from data sources that aren't reasonable to fetch
-in full on the client. Currently returns task-comment matches; the parent
-task is identified along with a snippet of the matching comment.
-
- * @summary Search across the workspace
- */
-export const searchQueryQMin = 2;
-
-export const searchQueryLimitDefault = 20;
-export const searchQueryLimitMax = 50;
-
-export const SearchQueryParams = zod.object({
-  q: zod.coerce
-    .string()
-    .min(searchQueryQMin)
-    .describe("The search query (case-insensitive substring match)"),
-  limit: zod.coerce
-    .number()
-    .max(searchQueryLimitMax)
-    .default(searchQueryLimitDefault),
-});
-
-export const SearchResponse = zod.object({
-  comments: zod.array(
-    zod.object({
-      commentId: zod.number(),
-      taskId: zod.number(),
-      taskTitle: zod.string(),
-      projectId: zod.number(),
-      memberId: zod.number(),
-      snippet: zod.string().describe("Excerpt of the comment around the match"),
-      createdAt: zod.coerce.date(),
-    }),
-  ),
-});
-
-/**
  * @summary Workload breakdown per member
  */
 export const GetWorkloadResponseItem = zod.object({
