@@ -37,3 +37,14 @@ externalPort = 3000
 
 [nix]
 channel = "stable-25_05"
+
+[userenv]
+
+[userenv.shared]
+
+[userenv.shared.XCtSL]
+
+[userenv.shared.XCtSL."k5gp+KQc51"]
+
+[userenv.shared.XCtSL."k5gp+KQc51"."ObIJo3wI5E6xVbgrEy39xLZV2mgrVLyJQpIk+zZWBBL3c7aHFywqc8Gxr+6+j7D4E"]
+"nsQ==" = "https://replit.com/join/kfppxqeuxe-imrana124589"
