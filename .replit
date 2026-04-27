@@ -18,33 +18,3 @@ expertMode = true
 [postMerge]
 path = "scripts/post-merge.sh"
 timeoutMs = 20000
-
-[[ports]]
-localPort = 8080
-externalPort = 8080
-
-[[ports]]
-localPort = 8081
-externalPort = 80
-
-[[ports]]
-localPort = 8082
-externalPort = 3001
-
-[[ports]]
-localPort = 22382
-externalPort = 3000
-
-[nix]
-channel = "stable-25_05"
-
-[userenv]
-
-[userenv.shared]
-
-[userenv.shared.XCtSL]
-
-[userenv.shared.XCtSL."k5gp+KQc51"]
-
-[userenv.shared.XCtSL."k5gp+KQc51"."ObIJo3wI5E6xVbgrEy39xLZV2mgrVLyJQpIk+zZWBBL3c7aHFywqc8Gxr+6+j7D4E"]
-"nsQ==" = "https://replit.com/join/kfppxqeuxe-imrana124589"
